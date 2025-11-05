@@ -14,38 +14,33 @@ def farm(field):
 		
 		
 def multi_drone():
+	def spawn_drones():
+		global n
+		loop = range(world_size - 1)
+		for _ in loop:
+			spawn_drone(worker)
+			n -= 1 # 1 tick
+	
 	def worker():
-		x = get_pos_x()
-		field = set()
-		for y in range(get_world_size()):
-			field.add((x, y))
-			
-		for pos in field:
-			utils.go_to(pos)
-			if get_pos_x() % 2 == get_pos_y() % 2:
-				utils.smart_plant(Entities.Tree)
-				utils.water()
+		for _ in range(n):
+			pass # cancels out tick from n -= 1
+			move(East)
+		mod = get_pos_x() % 2
+		loop = 0
+		while True:
+			harvest()
+			if mod == get_pos_y() % 2:
+				plant(Entities.Tree)
 			else:
-				utils.smart_plant(Entities.Bush)
-				#utils.water()
+				plant(Entities.Bush)
+			if loop < world_size:
+				use_item(Items.Water)
+			move(North)
+			loop = (loop + 1) % (8 * world_size)
 			
-			
-		for pos in field:
-			utils.go_to(pos)
-			utils.harvest_when_ready()
-		
-		return
-	
-
-	drones = []
-	
-	for x in range(get_world_size()):
-		utils.go_to(x, 0)
-		
-		if num_drones() < max_drones():
-			drones.append(spawn_drone(worker))
-	
+	world_size = get_world_size()
+	n = world_size - 1
+	clear()
+	spawn_drones()
+	utils.wait_ticks(200)
 	worker()
-	
-	for drone in drones:
-		wait_for(drone)

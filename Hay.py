@@ -1,4 +1,4 @@
-#import utils
+import utils
 
 
 def harvest_and_plant():
@@ -16,22 +16,22 @@ def farm(field):
 def multi_drone():
 	def spawn_drones():
 		global n
-		
-		loop = range(get_world_size() - 1) # 3 ticks
-		for _ in loop: # 1 tick
-			spawn_drone(worker) # 200 ticks
+		loop = range(world_size - 1)
+		for _ in loop:
+			spawn_drone(worker)
 			n -= 1 # 1 tick
 	
 	def worker():
 		for _ in range(n):
+			pass # cancels out tick from n -= 1
 			move(East)
 		while True:
 			move(North)
 			harvest()
-	
-	n = 31
-	clear() # 200 ticks
-	spawn_drones() # 6235 ticks
-	for _ in range(197): # 2 ticks
-		pass
+			
+	world_size = get_world_size()
+	n = world_size - 1
+	clear()
+	spawn_drones()
+	utils.wait_ticks(200)
 	worker()

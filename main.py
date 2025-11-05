@@ -1,7 +1,7 @@
 #import utils
 import Hay
-#import Wood
-#import Carrots
+import Wood
+import Carrots
 #import Pumpkins
 #import Cacti
 #import Bones
@@ -9,4 +9,4 @@ import Hay
 #import Sunflowers
 #import Polyculture
 
-Hay.multi_drone()
+Carrots.multi_drone()

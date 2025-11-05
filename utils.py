@@ -106,10 +106,7 @@ def till_farm():
 
 
 def wait_ticks(ticks):
-	if ticks <= 0:
-		return
-	timestamp_before = get_tick_count()
-	while get_tick_count() < timestamp_before + ticks:
+	for _ in range(ticks - 3): # 3 ticks
 		pass
 		
 		
