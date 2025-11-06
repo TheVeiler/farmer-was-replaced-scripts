@@ -52,57 +52,37 @@ def farm(field):
 		
 		
 def multi_drone():
-	def plant_worker():
-		x = get_pos_x()
-		for y in range(0, get_world_size()):
-			utils.go_to(x, y)
+	def spawn_drones():
+		global n
+		for _ in range(world_size - 1):
+			spawn_drone(worker)
+			n -= 1 # 1 tick
 			
-			utils.smart_plant(Entities.Sunflower)
-			utils.water()
-		return
-		
-		
-	def harvest_worker():
-		x = get_pos_x()
-		for y in range(0, get_world_size()):
-			utils.go_to(x, y)
+	def worker():
+		for _ in range(n):
+			pass # cancels out tick from n -= 1
+			move(East)
+		for _ in range(world_size):
+			till()
+			use_item(Items.Water, 4)
+			move(North)
+		while True:
+			for _ in range(world_size):
+				plant(Entities.Sunflower)
+				use_item(Items.Water)
+				move(North)
+			for petals in range(15, 6, -1):
+				for _ in range(world_size):
+					if measure() == petals:
+						harvest()
+					else:
+						utils.wait_ticks(200)
+					move(North)
 			
-			if measure() == petals:
-				utils.harvest_when_ready()
-		return
+	world_size = get_world_size()
+	n = world_size - 1
 	
-	
-	# plant_worker
-	drones = []
-	
-	for x in range(0, get_world_size()):
-		utils.go_to(x, 0)
-		
-		if num_drones() < max_drones():
-			drones.append(spawn_drone(plant_worker))
-			
-	plant_worker()
-	
-	for drone in drones:
-		wait_for(drone)
-		
-	
-	# harvest_worker
-	for petals in range(15, 6, -1):
-		drones = []
-		
-		for x in range(0, get_world_size()):
-			utils.go_to(x, 0)
-			
-			if num_drones() < max_drones():
-				drones.append(spawn_drone(harvest_worker))
-				
-		harvest_worker()
-		
-		for drone in drones:
-			wait_for(drone)
-	
-	
-	# harvest
-	utils.go_to(0, 0)
-	harvest()
+	clear()
+	spawn_drones()
+	utils.wait_ticks(200)
+	worker()

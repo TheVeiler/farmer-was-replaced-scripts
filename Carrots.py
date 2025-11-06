@@ -16,10 +16,15 @@ def farm(field):
 def multi_drone():
 	def spawn_drones():
 		global n
-		loop = range(world_size - 1)
-		for _ in loop:
+		for _ in range(world_size - 1):
 			spawn_drone(worker)
 			n -= 1 # 1 tick
+			
+	def smart_water():
+		global water_loop
+		if water_loop < world_size:
+			use_item(Items.Water)
+		water_loop = (water_loop + 1) % (water_reset_loop * world_size)
 	
 	def worker():
 		for _ in range(n):
@@ -27,18 +32,19 @@ def multi_drone():
 			move(East)
 		for _ in range(world_size):
 			till()
+			use_item(Items.Water, 4)
 			move(North)
-		loop = 0
 		while True:
 			harvest()
 			plant(Entities.Carrot)
-			if loop < world_size:
-				use_item(Items.Water)
+			smart_water()
 			move(North)
-			loop = (loop + 1) % (10 * world_size)
 	
 	world_size = get_world_size()
 	n = world_size - 1
+	water_loop = 0
+	water_reset_loop = 14
+	
 	clear()
 	spawn_drones()
 	utils.wait_ticks(200)

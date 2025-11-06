@@ -16,46 +16,32 @@ def get_pos():
 	return get_pos_x(), get_pos_y()
 
 
-def go_to(x = (0, 0), y = None):
-	if y == None:
+def go_to(x = (0, 0), y = None): # O(27+n) ticks
+	if y == None: # 2 ticks
 		x, y = x
 
-	#posX = get_pos_x()
-	#if (posX <= x and x - posX <= get_world_size() / 2) or (posX >= x and x - posX <= -get_world_size() / 2):
-	#	dirX = East
-	#	distX = min(abs(posX - x), abs(x + get_world_size() - posX))
-	#else:
-	#	dirX = West
-	#	distX = min(abs(x - posX), abs(posX + get_world_size() - x))
-	#	
-	#posY = get_pos_y()
-	#if (posY <= y and y - posY <= get_world_size() / 2) or (posY >= y and y - posY <= -get_world_size() / 2):
-	#	dirY = North
-	#	distY = min(abs(posY - y), abs(y + get_world_size() - posY))
-	#else:
-	#	dirY = South
-	#	distY = min(abs(y - posY), abs(posY + get_world_size() - y))
+	world_size = get_world_size() # 1 tick
 		
-	posX = get_pos_x()
-	distX = min(abs(x - posX), get_world_size() - abs(x - posX))
-	if (posX + distX) % get_world_size() == x:
+	posX = get_pos_x() # 1 tick
+	distX = abs(x - posX) # 2 ticks
+	distX = min(distX, world_size - distX) # 2 ticks
+	if (posX + distX) % world_size == x: # 4 ticks
 		dirX = East
 	else:
 		dirX = West
 		
-	posY = get_pos_y()
-	distY = min(abs(y - posY), get_world_size() - abs(y - posY))
-	if (posY + distY) % get_world_size() == y:
+	posY = get_pos_y() # 1 tick
+	distY = abs(y - posY) # 2 ticks
+	distY = min(distY, world_size - distY) # 2 ticks
+	if (posY + distY) % world_size == y: # 4 ticks
 		dirY = North
 	else:
 		dirY = South
 	
-	for i in range(distX):
+	for _ in range(distX):
 		move(dirX)
-	for i in range(distY):
+	for _ in range(distY):
 		move(dirY)
-		
-	#wait_ticks(200 * (distX + distY))
 	
 	
 def harvest_when_ready(turbo_mode = False):

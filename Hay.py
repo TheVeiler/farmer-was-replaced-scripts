@@ -16,8 +16,7 @@ def farm(field):
 def multi_drone():
 	def spawn_drones():
 		global n
-		loop = range(world_size - 1)
-		for _ in loop:
+		for _ in range(world_size - 1):
 			spawn_drone(worker)
 			n -= 1 # 1 tick
 	
@@ -26,11 +25,12 @@ def multi_drone():
 			pass # cancels out tick from n -= 1
 			move(East)
 		while True:
-			move(North)
 			harvest()
+			move(North)
 			
 	world_size = get_world_size()
 	n = world_size - 1
+	
 	clear()
 	spawn_drones()
 	utils.wait_ticks(200)

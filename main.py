@@ -6,7 +6,7 @@ import Carrots
 #import Cacti
 #import Bones
 #import Gold
-#import Sunflowers
+import Sunflowers
 #import Polyculture
 
-Carrots.multi_drone()
+Wood.multi_drone()
