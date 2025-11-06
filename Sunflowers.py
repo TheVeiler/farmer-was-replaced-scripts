@@ -51,7 +51,7 @@ def farm(field):
 		nbr_planted -= 1
 		
 		
-def multi_drone():
+def synced_multi_drone():
 	def spawn_drones():
 		global n
 		for _ in range(world_size - 1):
@@ -62,6 +62,7 @@ def multi_drone():
 		for _ in range(n):
 			pass # cancels out tick from n -= 1
 			move(East)
+		# ---
 		for _ in range(world_size):
 			till()
 			use_item(Items.Water, 4)

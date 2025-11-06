@@ -1,22 +1,17 @@
-def do_everywhere(fct = do_a_flip):
-	reset_pos()
-	for x in range(get_world_size()):
-		for i in range(get_world_size()):
-			if i > 0:
-				if get_pos_x() % 2 == 0:
-					move(North)
-				else:
-					move(South)
-				wait_ticks(200)
-			fct()
-		move(East)
+def do_everywhere(fct = do_a_flip): # (200 + f)n² + 200n + 4 ticks (where n = 32)
+	world = range(get_world_size())
+	for _ in world:
+		for _ in world:
+			fct() # f*n² ticks
+			move(North) # 200n²
+		move(East) # 200n
 
 
-def get_pos():
+def get_pos(): # 2 ticks
 	return get_pos_x(), get_pos_y()
 
 
-def go_to(x = (0, 0), y = None): # O(27+n) ticks
+def go_to(x = (0, 0), y = None): # 27+n ticks
 	if y == None: # 2 ticks
 		x, y = x
 
@@ -94,13 +89,6 @@ def till_farm():
 def wait_ticks(ticks):
 	for _ in range(ticks - 3): # 3 ticks
 		pass
-		
-		
-def wait_seconds(seconds):
-	if seconds <= 0:
-		return
-	for i in range(seconds):
-		do_a_flip()
 
 
 def water():

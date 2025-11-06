@@ -83,3 +83,45 @@ def multi_drone():
 		wait_for(drone)
 		
 	harvest()
+	
+	
+def synced_multi_drone():
+	def spawn_drones():
+		global n
+		for _ in range(world_size - 1):
+			spawn_drone(worker)
+			n -= 1 # 1 tick
+			
+	def worker():
+		for _ in range(n):
+			pass # cancels out tick from n -= 1
+			move(East)
+		# ---
+		for _ in range(world_size):
+			till()
+			use_item(Items.Water, 4)
+			move(North)
+		while True:
+			for _ in range(world_size):
+				plant(Entities.Pumpkin)
+				use_item(Items.Water)
+				move(North)
+			for _ in range(5):
+				for _ in range(world_size):
+					if get_entity_type() == Entities.Dead_Pumpkin:
+						plant(Entities.Pumpkin)
+					else:
+						utils.wait_ticks(200)
+					move(North)
+			if n == 0:
+				harvest()
+			else:
+				utils.wait_ticks(200)
+			
+	world_size = get_world_size()
+	n = world_size - 1
+	
+	clear()
+	spawn_drones()
+	utils.wait_ticks(200)
+	worker()

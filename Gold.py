@@ -93,3 +93,29 @@ def multi_drone():
 		explore()
 	
 	explore()
+	
+def synced_multi_drone():
+	def spawn_drones():
+		global n
+		for _ in range(world_size - 1):
+			spawn_drone(worker)
+			n -= 1 # 1 tick
+	
+	def worker():
+		for _ in range(n):
+			pass # cancels out tick from n -= 1
+			move(East)
+		# ---
+		while True:
+			plant(Entities.Bush)
+			use_item(Items.Weird_Substance, slime_quantity)
+			harvest()
+	
+	world_size = get_world_size()
+	n = world_size - 1
+	slime_quantity = 2 ** (num_unlocked(Unlocks.Mazes) - 1)
+	
+	clear()
+	spawn_drones()
+	utils.wait_ticks(200)
+	worker()
