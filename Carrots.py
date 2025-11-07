@@ -6,7 +6,6 @@ def harvest_and_plant():
 	utils.smart_plant(Entities.Carrot)
 	utils.water()
 		
-		
 def farm(field):
 	for pos in field["path"]:
 		utils.go_to(pos)
@@ -14,11 +13,17 @@ def farm(field):
 		
 		
 def synced_multi_drone():
-	def spawn_drones():
-		global n
+	def set_position():
+		for _ in range(id_drone):
+			pass # cancels out tick from id_drone -= 1
+			move(East)
+			
+	def spawn_drones(worker):
+		global id_drone
+		id_drone = world_size - 1
 		for _ in range(world_size - 1):
 			spawn_drone(worker)
-			n -= 1 # 1 tick
+			id_drone -= 1 # 1 tick
 			
 	def smart_water():
 		global water_loop
@@ -26,11 +31,8 @@ def synced_multi_drone():
 			use_item(Items.Water)
 		water_loop = (water_loop + 1) % (water_reset_loop * world_size)
 	
-	def worker():
-		for _ in range(n):
-			pass # cancels out tick from n -= 1
-			move(East)
-		# ---
+	def farm_worker():
+		set_position()
 		for _ in range(world_size):
 			till()
 			use_item(Items.Water, 4)
@@ -42,11 +44,11 @@ def synced_multi_drone():
 			move(North)
 	
 	world_size = get_world_size()
-	n = world_size - 1
+	id_drone = 0
 	water_loop = 0
 	water_reset_loop = 14
-	
 	clear()
-	spawn_drones()
+	
+	spawn_drones(farm_worker)
 	utils.wait_ticks(200)
-	worker()
+	farm_worker()

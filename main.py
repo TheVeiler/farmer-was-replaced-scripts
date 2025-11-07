@@ -10,4 +10,4 @@ import Gold
 import Sunflowers
 #import Polyculture
 
-Gold.synced_multi_drone()
+Sunflowers.synced_multi_drone()

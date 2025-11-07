@@ -1,23 +1,17 @@
 import utils
 
 
-def farm(field):
-	pass
-
 def turn_left():
 	global facing
 	facing = left_from[facing]
-
 
 def turn_right():
 	global facing
 	facing = right_from[facing]
 
-
 def move_forward():
 	global facing
 	move(facing)
-
 
 def v0():
 	while True:
@@ -44,7 +38,6 @@ def v0():
 				move_forward()
 	
 		harvest()
-		
 		
 def multi_drone():
 	clear()
@@ -94,28 +87,32 @@ def multi_drone():
 	
 	explore()
 	
+
 def synced_multi_drone():
-	def spawn_drones():
-		global n
+	def set_position():
+		for _ in range(id_drone):
+			pass # cancels out tick from id_drone -= 1
+			move(East)
+			
+	def spawn_drones(worker):
+		global id_drone
+		id_drone = world_size - 1
 		for _ in range(world_size - 1):
 			spawn_drone(worker)
-			n -= 1 # 1 tick
+			id_drone -= 1 # 1 tick
 	
-	def worker():
-		for _ in range(n):
-			pass # cancels out tick from n -= 1
-			move(East)
-		# ---
+	def farm_worker():
+		set_position()
 		while True:
 			plant(Entities.Bush)
 			use_item(Items.Weird_Substance, slime_quantity)
 			harvest()
 	
 	world_size = get_world_size()
-	n = world_size - 1
+	id_drone = 0
 	slime_quantity = 2 ** (num_unlocked(Unlocks.Mazes) - 1)
-	
 	clear()
-	spawn_drones()
+	
+	spawn_drones(farm_worker)
 	utils.wait_ticks(200)
-	worker()
+	farm_worker()

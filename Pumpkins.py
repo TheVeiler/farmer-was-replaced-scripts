@@ -21,7 +21,6 @@ def plant_pumpkins(path):
 			utils.water()
 		growing_pumpkins = list(pumpkins_to_check)
 
-
 def farm(field):
 	path = field["path"]
 	
@@ -37,7 +36,6 @@ def farm(field):
 		utils.go_to(pos)
 		utils.harvest_when_ready()
 		return
-	
 	
 def multi_drone():
 	def check_and_plant(field):
@@ -86,17 +84,20 @@ def multi_drone():
 	
 	
 def synced_multi_drone():
-	def spawn_drones():
-		global n
+	def set_position():
+		for _ in range(id_drone):
+			pass # cancels out tick from id_drone -= 1
+			move(East)
+			
+	def spawn_drones(worker):
+		global id_drone
+		id_drone = world_size - 1
 		for _ in range(world_size - 1):
 			spawn_drone(worker)
-			n -= 1 # 1 tick
+			id_drone -= 1 # 1 tick
 			
-	def worker():
-		for _ in range(n):
-			pass # cancels out tick from n -= 1
-			move(East)
-		# ---
+	def farm_worker():
+		set_position()
 		for _ in range(world_size):
 			till()
 			use_item(Items.Water, 4)
@@ -119,9 +120,9 @@ def synced_multi_drone():
 				utils.wait_ticks(200)
 			
 	world_size = get_world_size()
-	n = world_size - 1
-	
+	id_drone = 0
 	clear()
-	spawn_drones()
+	
+	spawn_drones(farm_worker)
 	utils.wait_ticks(200)
-	worker()
+	farm_worker()
