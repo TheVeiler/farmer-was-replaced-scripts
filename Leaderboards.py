@@ -1,3 +1,3 @@
-leaderboard = Leaderboards.Hay
-filename = "LB_hay"
-leaderboard_run(leaderboard, filename, 1000)
+leaderboard = Leaderboards.Sunflowers
+filename = "LB_sunflowers"
+leaderboard_run(leaderboard, filename, 10000)
